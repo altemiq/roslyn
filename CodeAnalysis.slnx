@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <File Path="src\Directory.Build.props" />
+    <File Path="src\Directory.Packages.props" />
+    <Project Path="src\Analyzers\Core\CodeAnalysis.NetAnalyzers.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests\Directory.Build.props" />
+    <File Path="tests\Directory.Packages.props" />
+    <Project Path="tests\Analyzers\Core\CodeAnalysis.NetAnalyzers.Tests.csproj" />
+  </Folder>
+</Solution>
