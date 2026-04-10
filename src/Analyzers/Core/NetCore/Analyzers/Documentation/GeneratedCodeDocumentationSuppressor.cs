@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 /// <summary>
 /// Suppresses analyzer for documentation when the code to auto generated.
 /// </summary>
-[DiagnosticAnalyzer(LanguageNames.CSharp,  LanguageNames.VisualBasic)]
+[DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
 public class GeneratedCodeDocumentationSuppressor : DiagnosticSuppressor
 {
     private static readonly SuppressionDescriptor SuppressDocumentationRule = new(

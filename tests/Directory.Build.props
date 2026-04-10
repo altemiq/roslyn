@@ -7,7 +7,6 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>$(Company).$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>$(Company)</RootNamespace>
-    <RootNamespace>$(RootNamespace.Replace('.Tests', ''))</RootNamespace>
   </PropertyGroup>
 
 </Project>
