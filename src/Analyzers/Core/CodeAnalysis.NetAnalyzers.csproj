@@ -3,10 +3,28 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Altemiq</RootNamespace>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- do not produce the reference assembly -->
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Packaging">
+    <IsPackable>true</IsPackable>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageTags>analyzers;supressors</PackageTags>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Common" VersionOverride="3.3.1" PrivateAssets="All" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <!-- This ensures the library will be packaged as an analyzer when we use `dotnet pack` -->
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet" Visible="false" />
   </ItemGroup>
 
 </Project>
