@@ -21,6 +21,12 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Common" VersionOverride="3.3.1" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="$([MSBuild]::GetPathOfFileAbove('install.ps1'));$([MSBuild]::GetPathOfFileAbove('uninstall.ps1'))"
+           Pack="true"
+           Link="tools/%(FileName)%(Extension)"
+           PackagePath="tools" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- This ensures the library will be packaged as an analyzer when we use `dotnet pack` -->
