@@ -92,6 +92,34 @@ public class GeneratedCodeDocumentationSuppressorTests
             """
             namespace MyNamespace
             {
+                [System.CodeDom.Compiler.GeneratedCode("", "")]
+                public class UnDocumentedClass
+                {
+                }
+            }
+            """,
+            new DiagnosticResult("CS1591", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
+                .WithLocation(4, 18)
+                .WithIsSuppressed(true));
+        yield return () => (
+            """
+            using System.CodeDom.Compiler;
+            
+            namespace MyNamespace
+            {
+                [GeneratedCode("", "")]
+                public class UnDocumentedClass
+                {
+                }
+            }
+            """,
+            new DiagnosticResult("CS1591", Microsoft.CodeAnalysis.DiagnosticSeverity.Warning)
+                .WithLocation(6, 18)
+                .WithIsSuppressed(true));
+        yield return () => (
+            """
+            namespace MyNamespace
+            {
                 public class UnDocumentedClass
                 {
                 }
