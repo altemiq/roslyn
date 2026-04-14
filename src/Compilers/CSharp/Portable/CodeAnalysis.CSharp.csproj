@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Microsoft.$(MSBuildProjectName)</RootNamespace>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <PackageDescription>
+      Altemiq .NET Compiler Extensions support for C#, $(AssemblyName).dll.
+    </PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" VersionOverride="3.5.0" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Using Include="Microsoft.CodeAnalysis" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Portable\CodeAnalysis.csproj" />
+  </ItemGroup>
+  
+
+</Project>

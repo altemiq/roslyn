@@ -4,9 +4,21 @@
     <File Path="src\Directory.Packages.props" />
     <Project Path="src\Analyzers\Core\CodeAnalysis.NetAnalyzers.csproj" />
   </Folder>
+  <Folder Name="/src/Compilers/" />
+  <Folder Name="/src/Compilers/Core/">
+    <Project Path="src\Compilers\Core\Portable\CodeAnalysis.csproj" />
+  </Folder>
+  <Folder Name="/src/Compilers/CSharp/">
+    <Project Path="src/Compilers/CSharp/Portable/CodeAnalysis.CSharp.csproj" />
+  </Folder>
+  <Folder Name="/src/Compilers/VisualBasic/">
+    <Project Path="src\Compilers\VisualBasic\Portable\CodeAnalysis.VisualBasic.vbproj" />
+  </Folder>
   <Folder Name="/tests/">
     <File Path="tests\Directory.Build.props" />
     <File Path="tests\Directory.Packages.props" />
+    <Project Path="tests/CodeAnalysis.CSharp.Tests/CodeAnalysis.CSharp.Tests.csproj" />
+    <Project Path="tests/CodeAnalysis.VisualBasic.Tests/CodeAnalysis.VisualBasic.Tests.vbproj" />
     <Project Path="tests\Analyzers\Core\CodeAnalysis.NetAnalyzers.Tests.csproj" />
   </Folder>
 </Solution>

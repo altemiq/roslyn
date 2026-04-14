@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+  </PropertyGroup>
+  
+  <PropertyGroup Label="Packaging">
+    <PackageId>$(RootNamespace).Common</PackageId>
+    <PackageDescription>
+      A shared package used by the Altemiq .NET Compiler Extensions.
+      Do not install this package manually, it will be added as a prerequisite by other packages that require it.
+    </PackageDescription> 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" VersionOverride="3.5.0" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).CSharp" />
+    <InternalsVisibleTo Include="$(AssemblyName).VisualBasic" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="TUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Compilers\VisualBasic\Portable\CodeAnalysis.VisualBasic.vbproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Import Include="TUnit.Core" />
+    <Import Include="TUnit.Assertions" />
+    <Import Include="TUnit.Assertions.Extensions" />
+  </ItemGroup>
+
+</Project>
