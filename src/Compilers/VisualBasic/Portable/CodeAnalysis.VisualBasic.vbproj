@@ -18,5 +18,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Portable\CodeAnalysis.csproj" />
   </ItemGroup>
+  
+  <Target Name="_UpdateDocumentationFile"
+          Condition=" !Exists('$(DocumentationFile)') AND Exists('$(IntermediateOutputPath)$(DocumentationFile)') "
+          BeforeTargets="AddRefAssemblyToPackage">
+    <PropertyGroup>
+      <DocumentationFile>$(IntermediateOutputPath)$(DocumentationFile)</DocumentationFile>
+    </PropertyGroup>
+  </Target>
 
 </Project>
