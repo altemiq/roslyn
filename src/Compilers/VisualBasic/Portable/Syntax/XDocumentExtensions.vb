@@ -1,3 +1,9 @@
+' -----------------------------------------------------------------------
+' <copyright file="XDocumentExtensions.vb" company="Altemiq">
+' Copyright (c) Altemiq. All rights reserved.
+' </copyright>
+' -----------------------------------------------------------------------
+
 Imports System.Runtime.CompilerServices
 
 Namespace Syntax
@@ -101,16 +107,14 @@ Namespace Syntax
 
                 ' Generic
                 If name = Roslyn.Utilities.DocumentationCommentXmlNames.Elements.TypeParameter Then
-                    Return _
-                        SyntaxFactory.XmlElement(
-                            Roslyn.Utilities.DocumentationCommentXmlNames.Elements.TypeParameter,
-                            SyntaxFactory.List(element.ToXmlNodes)).AddStartTagAttributes(SyntaxFactory.XmlNameAttribute(GetName(element)))
+                    Return SyntaxFactory.XmlElement(
+                        Roslyn.Utilities.DocumentationCommentXmlNames.Elements.TypeParameter,
+                        SyntaxFactory.List(element.ToXmlNodes)).AddStartTagAttributes(SyntaxFactory.XmlNameAttribute(GetName(element)))
                 End If
                 If name = Roslyn.Utilities.DocumentationCommentXmlNames.Elements.TypeParameterReference Then
-                    Return _
-                        SyntaxFactory.XmlElement(
-                            Roslyn.Utilities.DocumentationCommentXmlNames.Elements.TypeParameterReference,
-                            SyntaxFactory.List(element.ToXmlNodes)).AddStartTagAttributes(SyntaxFactory.XmlNameAttribute(GetName(element)))
+                    Return SyntaxFactory.XmlElement(
+                        Roslyn.Utilities.DocumentationCommentXmlNames.Elements.TypeParameterReference,
+                        SyntaxFactory.List(element.ToXmlNodes)).AddStartTagAttributes(SyntaxFactory.XmlNameAttribute(GetName(element)))
                 End If
 
                 ' List
@@ -123,30 +127,30 @@ Namespace Syntax
                                 GetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Type)))
                 End If
                 If name = Roslyn.Utilities.DocumentationCommentXmlNames.Elements.ListHeader Then
-                    Return _
-                        SyntaxFactory.XmlElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.ListHeader, SyntaxFactory.List(element.ToXmlNodes))
+                    Return SyntaxFactory.XmlElement(
+                        Roslyn.Utilities.DocumentationCommentXmlNames.Elements.ListHeader,
+                        SyntaxFactory.List(element.ToXmlNodes))
                 End If
                 If name = Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Item Then
-                    Return _
-                        SyntaxFactory.XmlElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Item,
-                                                 SyntaxFactory.List(element.ToXmlNodes))
+                    Return SyntaxFactory.XmlElement(
+                        Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Item,
+                        SyntaxFactory.List(element.ToXmlNodes))
                 End If
                 If name = Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Term Then
-                    Return _
-                        SyntaxFactory.XmlElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Term,
-                                                 SyntaxFactory.List(element.ToXmlNodes))
+                    Return SyntaxFactory.XmlElement(
+                        Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Term,
+                        SyntaxFactory.List(element.ToXmlNodes))
                 End If
                 If name = Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Description Then
-                    Return _
-                        SyntaxFactory.XmlElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Description,
-                                                 SyntaxFactory.List(element.ToXmlNodes))
+                    Return SyntaxFactory.XmlElement(
+                        Roslyn.Utilities.DocumentationCommentXmlNames.Elements.Description,
+                        SyntaxFactory.List(element.ToXmlNodes))
                 End If
 
                 ' Just translate directly
                 If element.HasAttributes Then
-                    Return _
-                        SyntaxFactory.XmlElement(name, SyntaxFactory.List(element.ToXmlNodes)).
-                            AddStartTagAttributes(GetAttributes(element).ToArray())
+                    Return SyntaxFactory.XmlElement(name, SyntaxFactory.List(element.ToXmlNodes)).AddStartTagAttributes(
+                        GetAttributes(element).ToArray())
                 End If
 
                 Return SyntaxFactory.XmlElement(name, SyntaxFactory.List(element.ToXmlNodes))
@@ -170,31 +174,31 @@ Namespace Syntax
                 Return True
             End If
 
-            value = string.Empty
+            value = String.Empty
             Return False
         End Function
 
         Private Function GetAttributes(element As XElement) As IEnumerable(Of BaseXmlAttributeSyntax)
             Return element.Attributes.Select(Function(attribute As XAttribute) As BaseXmlAttributeSyntax
-                If attribute.Value IsNot Nothing Then
-                    If attribute.Name.LocalName = Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Name Then
-                        Return SyntaxFactory.XmlNameAttribute(attribute.Value)
-                    End If
+                                                 If attribute.Value IsNot Nothing Then
+                                                     If attribute.Name.LocalName = Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Name Then
+                                                         Return SyntaxFactory.XmlNameAttribute(attribute.Value)
+                                                     End If
 
-                    If attribute.Name.LocalName = Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref Then
-                        Return SyntaxFactory.XmlCrefAttribute(GetCrefElement(attribute.Value))
-                    End If
+                                                     If attribute.Name.LocalName = Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref Then
+                                                         Return SyntaxFactory.XmlCrefAttribute(GetCrefElement(attribute.Value))
+                                                     End If
 
-                    Return CreateAttribute(
-                        attribute.Name.LocalName,
-                        attribute.Value)
-                End If
+                                                     Return CreateAttribute(
+                                                         attribute.Name.LocalName,
+                                                         attribute.Value)
+                                                 End If
 
-                Throw New InvalidOperationException
-            End Function)
+                                                 Throw New InvalidOperationException
+                                             End Function)
         End Function
 
-        Private Function CreateAttribute(name as String, value as String) As XmlAttributeSyntax
+        Private Function CreateAttribute(name As String, value As String) As XmlAttributeSyntax
             Return SyntaxFactory.XmlAttribute(
                 SyntaxFactory.XmlName(
                     Nothing,
@@ -208,55 +212,49 @@ Namespace Syntax
 
         Private Function CreateSeeElement(element As XElement) As XmlEmptyElementSyntax
             Dim value As String = Nothing
-            If TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, value) then
+            If TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, value) Then
                 Return SyntaxFactory.XmlSeeElement(GetCrefElement(value))
-            End if
-
-            if TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Langword, value) Then
-                Return _
-                    SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).
-                        AddAttributes(
-                            CreateAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Langword, GetLangword(value)))
             End If
 
-            if TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, value) Then
-                Return _
-                    SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).
-                        AddAttributes(
-                            CreateAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, value))
+            If TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Langword, value) Then
+                Return SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
+                    CreateAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Langword, GetLangword(value)))
             End If
 
-            throw new InvalidOperationException
+            If TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, value) Then
+                Return SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
+                    CreateAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, value))
+            End If
+
+            Throw New InvalidOperationException
         End Function
 
         Private Function CreateSeeAlsoElement(element As XElement) As XmlEmptyElementSyntax
             Dim value As String = Nothing
-            if TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, value) Then
+            If TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, value) Then
                 Return SyntaxFactory.XmlSeeAlsoElement(GetCrefElement(value))
             End If
 
-            if TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, value) Then
-                Return _
-                    SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).
-                        AddAttributes(
-                            CreateAttribute(
-                                Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href,
-                                value))
+            If TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, value) Then
+                Return SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
+                    CreateAttribute(
+                        Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href,
+                        value))
             End If
 
-            throw new InvalidOperationException
+            Throw New InvalidOperationException
         End Function
 
-        Private Function CreateCrefElement(element As XElement) as CrefReferenceSyntax
+        Private Function CreateCrefElement(element As XElement) As CrefReferenceSyntax
             Dim value As String = Nothing
             If TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, value) Then
                 Return GetCrefElement(value)
             End If
-            throw new InvalidOperationException
+            Throw New InvalidOperationException
         End Function
 
         Private Function GetCrefElement(cref As String) As CrefReferenceSyntax
-            Dim colonIndex = cref.IndexOf(":"C)
+            Dim colonIndex = cref.IndexOf(":"c)
             If colonIndex < 0 Then
                 Return SyntaxFactory.CrefReference(QualifiedName(cref))
             End If
@@ -264,43 +262,43 @@ Namespace Syntax
             colonIndex += 1
             Return SyntaxFactory.CrefReference(QualifiedName(cref.Substring(colonIndex)))
         End Function
-        
-        Private Function GetLangword(value as String) As String
+
+        Private Function GetLangword(value As String) As String
             If value = "null" Then
                 Return "Nothing"
             End If
-            
-            If value = "true" then
+
+            If value = "true" Then
                 Return Boolean.TrueString
             End If
-            
-            If value = "false" then
+
+            If value = "false" Then
                 Return Boolean.FalseString
             End If
-            
-            If value = "static" then
+
+            If value = "static" Then
                 Return "Shared"
             End If
-            
-            If value = "this" then
+
+            If value = "this" Then
                 Return "Me"
             End If
-            
-            If value = "base" then
+
+            If value = "base" Then
                 Return "MyBase"
             End If
-            
-            If value = "overload" then
+
+            If value = "overload" Then
                 Return "Overloads"
             End If
-            
-            If value = "override" then
+
+            If value = "override" Then
                 Return "Overrides"
             End If
-            
-            return value
+
+            Return value
         End Function
-        
+
         <Extension>
         Private Function AddStartTagAttributes(element As XmlElementSyntax, ParamArray items() As BaseXmlAttributeSyntax) As XmlElementSyntax
             Return element.WithStartTag(element.StartTag.WithAttributes(element.StartTag.Attributes.AddRange(items)))

@@ -1,6 +1,11 @@
+' -----------------------------------------------------------------------
+' <copyright file="SymbolExtensions.vb" company="Altemiq">
+' Copyright (c) Altemiq. All rights reserved.
+' </copyright>
+' -----------------------------------------------------------------------
+
 Imports System.Runtime.CompilerServices
 Imports Microsoft.CodeAnalysis.VisualBasic.Syntax
-
 
 ''' <content>
 ''' The <see cref="ITypeSymbol"/> extensions
@@ -11,7 +16,7 @@ Public Module SymbolExtensions
     ''' </summary>
     ''' <returns>The type syntax.</returns>
     <Extension>
-    Public Function ToType(type as ITypeSymbol) As TypeSyntax
+    Public Function ToType(type As ITypeSymbol) As TypeSyntax
         If type.SpecialType = SpecialType.System_Object Then
             Return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.ObjectKeyword))
         End If
@@ -62,10 +67,8 @@ Public Module SymbolExtensions
         End If
 
         ' String
-        If type.SpecialType = SpecialType.System_String And type.NullableAnnotation = NullableAnnotation.Annotated _
-            Then
-            Return _
-                SyntaxFactory.NullableType(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.StringKeyword)))
+        If type.SpecialType = SpecialType.System_String And type.NullableAnnotation = NullableAnnotation.Annotated Then
+            Return SyntaxFactory.NullableType(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.StringKeyword)))
         End If
         If type.SpecialType = SpecialType.System_String Then
             Return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.StringKeyword))
@@ -109,7 +112,7 @@ Public Module SymbolExtensions
         Throw New NotSupportedException
     End Function
 
-    Private Function TryGetSingle (Of T)(source As Immutable.ImmutableArray(Of T), ByRef value As T) As Boolean
+    Private Function TryGetSingle(Of T)(source As Immutable.ImmutableArray(Of T), ByRef value As T) As Boolean
         Dim enumerator = source.GetEnumerator
         If Not enumerator.MoveNext Then
             Return False
@@ -120,33 +123,28 @@ Public Module SymbolExtensions
     End Function
 
     Private Function GetArray(elementType As ITypeSymbol) As ArrayTypeSyntax
-        Return SyntaxFactory.ArrayType(elementType.ToType) _
-            .WithRankSpecifiers(
-                SyntaxFactory.List(
-                    New ArrayRankSpecifierSyntax() {SyntaxFactory.ArrayRankSpecifier}))
+        Return SyntaxFactory.ArrayType(elementType.ToType).WithRankSpecifiers(
+            SyntaxFactory.List(
+                New ArrayRankSpecifierSyntax() {SyntaxFactory.ArrayRankSpecifier}))
     End Function
 
     Private Function GetFullName(type As INamedTypeSymbol) As TypeSyntax
         Dim namespaceSyntax = GetNamespace(type.ContainingNamespace)
 
         If type.IsGenericType Then
-            Return _
-                SyntaxFactory.QualifiedName(
-                    namespaceSyntax,
-                    SyntaxFactory.GenericName(
-                        type.Name,
-                        SyntaxFactory.TypeArgumentList(
-                            GetTypeArguments(type))))
+            Return SyntaxFactory.QualifiedName(
+                namespaceSyntax,
+                SyntaxFactory.GenericName(
+                    type.Name,
+                    SyntaxFactory.TypeArgumentList(
+                        GetTypeArguments(type))))
         End If
 
         Return SyntaxFactory.QualifiedName(namespaceSyntax, SyntaxFactory.IdentifierName(type.Name))
     End Function
 
     Private Function GetNamespace(namespaceSymbol As INamespaceSymbol) As NameSyntax
-        Return GetNamespaceParts(namespaceSymbol) _
-            .Reverse _
-            .Select(Function(n) SyntaxFactory.IdentifierName(n)) _
-            .ToQualifiedName
+        Return GetNamespaceParts(namespaceSymbol).Reverse.Select(Function(n) SyntaxFactory.IdentifierName(n)).ToQualifiedName
     End Function
 
     Private Iterator Function GetNamespaceParts(namespaceSymbol As INamespaceSymbol) As IEnumerable(Of String)
@@ -169,7 +167,7 @@ Public Module SymbolExtensions
             Return SyntaxFactory.SingletonSeparatedList(first.ToType)
         End If
 
-        Dim arguments As New List(Of TypeSyntax) From { first.ToType, typeArguments.Current.ToType }
+        Dim arguments As New List(Of TypeSyntax) From {first.ToType, typeArguments.Current.ToType}
 
         While typeArguments.MoveNext
             arguments.Add(typeArguments.Current.ToType)

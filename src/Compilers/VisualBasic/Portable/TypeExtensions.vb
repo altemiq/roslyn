@@ -1,3 +1,9 @@
+' -----------------------------------------------------------------------
+' <copyright file="TypeExtensions.vb" company="Altemiq">
+' Copyright (c) Altemiq. All rights reserved.
+' </copyright>
+' -----------------------------------------------------------------------
+
 Public Module TypeExtensions
     ''' <summary>
     ''' Converts the type to the <see cref="Syntax.TypeSyntax"/>.
@@ -6,7 +12,7 @@ Public Module TypeExtensions
     ''' <returns>The type syntax.</returns>
     ''' <exception cref="ArgumentOutOfRangeException">The parameters are the wrong length.</exception>
     <Runtime.CompilerServices.Extension>
-    Public Function ToTypeSyntax(type as Type, ParamArray parameters() as Syntax.TypeSyntax) As Syntax.NameSyntax
+    Public Function ToTypeSyntax(type As Type, ParamArray parameters() As Syntax.TypeSyntax) As Syntax.NameSyntax
         If Not type.IsGenericType Then
             If type.FullName IsNot Nothing Then
                 Return QualifiedName(type.FullName)
@@ -15,12 +21,12 @@ Public Module TypeExtensions
             Throw New InvalidOperationException
         End If
 
-        Dim index = type.Name.IndexOf("`"C)
+        Dim index = type.Name.IndexOf("`"c)
         Dim count = Integer.Parse(type.Name.Substring(index + 1), Globalization.CultureInfo.InvariantCulture)
 
         Dim parameterList = SyntaxFactory.SeparatedList(parameters)
         If count <> parameterList.Count Then
-            Throw New ArgumentOutOfRangeException(nameof(parameters))
+            Throw New ArgumentOutOfRangeException(NameOf(parameters))
         End If
 
         Dim name = type.Name.Substring(0, index)
