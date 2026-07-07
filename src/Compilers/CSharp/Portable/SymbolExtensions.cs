@@ -175,7 +175,7 @@ public static class SymbolExtensions
             if (method is { MethodKind: MethodKind.Constructor, ReceiverType: { } receiverType })
             {
                 return SyntaxFactory.ObjectCreationExpression(
-                        SyntaxFactory.QualifiedName(receiverType.ToString()))
+                        SyntaxFactory.ParseName(receiverType.ToString()))
                     .WithArgumentList(
                         SyntaxFactory.ArgumentList(
                             SyntaxFactory.SeparatedList(

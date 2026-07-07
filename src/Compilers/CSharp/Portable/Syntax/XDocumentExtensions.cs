@@ -164,15 +164,15 @@ public static class XDocumentExtensions
             var colonIndex = cref.IndexOf(':');
             if (colonIndex < 0)
             {
-                return SyntaxFactory.NameMemberCref(SyntaxFactory.QualifiedName(cref));
+                return SyntaxFactory.NameMemberCref(SyntaxFactory.ParseName(cref));
             }
 
             var type = cref.Substring(0, colonIndex);
             colonIndex++;
             return type switch
             {
-                "T" => SyntaxFactory.TypeCref(SyntaxFactory.QualifiedName(cref.Substring(colonIndex))),
-                _ => SyntaxFactory.NameMemberCref(SyntaxFactory.QualifiedName(cref.Substring(colonIndex))),
+                "T" => SyntaxFactory.TypeCref(SyntaxFactory.ParseName(cref.Substring(colonIndex))),
+                _ => SyntaxFactory.NameMemberCref(SyntaxFactory.ParseName(cref.Substring(colonIndex))),
             };
         }
     }

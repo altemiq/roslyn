@@ -30,7 +30,7 @@ public static class TypeExtensions
             if (!type.IsGenericTypeDefinition)
             {
                 return type.FullName is { } fullName
-                    ? SyntaxFactory.QualifiedName(fullName)
+                    ? SyntaxFactory.ParseName(fullName)
                     : throw new InvalidOperationException();
             }
 
@@ -46,7 +46,7 @@ public static class TypeExtensions
             var name = type.Name.Substring(0, index);
             var genericName = SyntaxFactory.GenericName(SyntaxFactory.Identifier(name), SyntaxFactory.TypeArgumentList(parameterList));
             return type is { Namespace: { } n }
-                ? SyntaxFactory.QualifiedName(SyntaxFactory.QualifiedName(n), genericName)
+                ? SyntaxFactory.QualifiedName(SyntaxFactory.ParseName(n), genericName)
                 : genericName;
         }
     }

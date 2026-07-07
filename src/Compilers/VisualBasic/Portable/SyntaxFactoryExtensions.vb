@@ -7,15 +7,6 @@ Public Module SyntaxFactoryExtensions
     ''' <summary>
     ''' Creates a qualified <see cref="Syntax.NameSyntax"/> node.
     ''' </summary>
-    ''' <param name="fullName">The full name.</param>
-    ''' <returns><see cref="Syntax.NameSyntax"/>.</returns>
-    Public Function QualifiedName(fullName As String) As Syntax.NameSyntax
-        Return QualifiedName(fullName.Split("."c).Select(Function(n) SyntaxFactory.IdentifierName(n)))
-    End Function
-
-    ''' <summary>
-    ''' Creates a qualified <see cref="Syntax.NameSyntax"/> node.
-    ''' </summary>
     ''' <param name="names">The name parts.</param>
     ''' <returns><see cref="Syntax.NameSyntax"/>.</returns>
     Public Function QualifiedName(names As IEnumerable(Of Syntax.SimpleNameSyntax)) As Syntax.NameSyntax

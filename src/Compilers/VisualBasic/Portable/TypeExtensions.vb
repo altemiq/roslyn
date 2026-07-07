@@ -15,7 +15,7 @@ Public Module TypeExtensions
     Public Function ToTypeSyntax(type As Type, ParamArray parameters() As Syntax.TypeSyntax) As Syntax.NameSyntax
         If Not type.IsGenericType Then
             If type.FullName IsNot Nothing Then
-                Return QualifiedName(type.FullName)
+                Return SyntaxFactory.ParseName(type.FullName)
             End If
 
             Throw New InvalidOperationException
@@ -32,7 +32,7 @@ Public Module TypeExtensions
         Dim name = type.Name.Substring(0, index)
         Dim genericName = SyntaxFactory.GenericName(SyntaxFactory.Identifier(name), SyntaxFactory.TypeArgumentList(parameterList))
         If type.Namespace IsNot Nothing Then
-            Return SyntaxFactory.QualifiedName(QualifiedName(type.Namespace), genericName)
+            Return SyntaxFactory.QualifiedName(SyntaxFactory.ParseName(type.Namespace), genericName)
         End If
 
         Return genericName

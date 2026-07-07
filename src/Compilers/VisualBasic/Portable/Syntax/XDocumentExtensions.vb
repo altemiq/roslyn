@@ -256,11 +256,11 @@ Namespace Syntax
         Private Function GetCrefElement(cref As String) As CrefReferenceSyntax
             Dim colonIndex = cref.IndexOf(":"c)
             If colonIndex < 0 Then
-                Return SyntaxFactory.CrefReference(QualifiedName(cref))
+                Return SyntaxFactory.CrefReference(SyntaxFactory.ParseName(cref))
             End If
 
             colonIndex += 1
-            Return SyntaxFactory.CrefReference(QualifiedName(cref.Substring(colonIndex)))
+            Return SyntaxFactory.CrefReference(SyntaxFactory.ParseName(cref.Substring(colonIndex)))
         End Function
 
         Private Function GetLangword(value As String) As String
