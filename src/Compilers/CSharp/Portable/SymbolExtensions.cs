@@ -23,6 +23,8 @@ public static class SymbolExtensions
         /// Gets the type syntax from the type symbol.
         /// </summary>
         /// <returns>The type syntax.</returns>
+        /// <exception cref="NotSupportedException">The type is not supported.</exception>
+        /// <exception cref="InvalidOperationException">Failed to get type arguments.</exception>
         public Syntax.TypeSyntax ToType()
         {
             return type switch
@@ -161,7 +163,7 @@ public static class SymbolExtensions
         public Syntax.ParameterListSyntax GetParameterList() =>
             SyntaxFactory.ParameterList(
                 SyntaxFactory.SeparatedList(
-                    method.Parameters.Select(parameter =>
+                    method.Parameters.Select(static parameter =>
                         SyntaxFactory.Parameter(
                                 SyntaxFactory.Identifier(parameter.Name))
                             .WithType(parameter.Type.ToType()))));
@@ -170,20 +172,16 @@ public static class SymbolExtensions
         /// Gets the object creation.
         /// </summary>
         /// <returns>The object creation list.</returns>
-        public Syntax.ObjectCreationExpressionSyntax GetObjectCreation()
-        {
-            if (method is { MethodKind: MethodKind.Constructor, ReceiverType: { } receiverType })
-            {
-                return SyntaxFactory.ObjectCreationExpression(
+        /// <exception cref="InvalidOperationException">The method is not a constructor.</exception>
+        public Syntax.ObjectCreationExpressionSyntax GetObjectCreation() =>
+            method is { MethodKind: MethodKind.Constructor, ReceiverType: { } receiverType }
+                ? SyntaxFactory.ObjectCreationExpression(
                         SyntaxFactory.ParseName(receiverType.ToString()))
                     .WithArgumentList(
                         SyntaxFactory.ArgumentList(
                             SyntaxFactory.SeparatedList(
                                 method.Parameters.Select(static parameter =>
-                                    SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameter.Name))))));
-            }
-
-            throw new InvalidOperationException();
-        }
+                                    SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameter.Name))))))
+                : throw new InvalidOperationException();
     }
 }

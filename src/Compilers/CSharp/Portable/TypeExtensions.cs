@@ -25,6 +25,7 @@ public static class TypeExtensions
         /// <param name="parameters">The type parameters.</param>
         /// <returns>The type syntax.</returns>
         /// <exception cref="ArgumentOutOfRangeException">The parameters are the wrong length.</exception>
+        /// <exception cref="InvalidOperationException">The full name is <see langword="null"/>.</exception>
         public Syntax.NameSyntax ToTypeSyntax(IEnumerable<Syntax.TypeSyntax> parameters)
         {
             if (!type.IsGenericTypeDefinition)

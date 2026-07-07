@@ -87,21 +87,23 @@ public static class SymbolExtensions
         /// <summary>
         /// Gets a value indicating whether this instance is a collection.
         /// </summary>
+        /// <param name="collectionType">The collection type.</param>
         public bool IsCollection(ITypeSymbol? collectionType) => type switch
         {
             { SpecialType: SpecialType.System_Collections_Generic_ICollection_T } => true,
             { OriginalDefinition: { } originalDefinition } when SymbolEqualityComparer.Default.Equals(originalDefinition, collectionType) => true,
-            { AllInterfaces: { Length: not 0 } interfaces } when interfaces.Select(i => i.OriginalDefinition).Contains(collectionType, SymbolEqualityComparer.Default) => true,
+            { AllInterfaces: { Length: not 0 } interfaces } when interfaces.Select(static i => i.OriginalDefinition).Contains(collectionType, SymbolEqualityComparer.Default) => true,
             _ => false,
         };
 
         /// <summary>
         /// Gets a value indicating whether this instance is a dictionary.
         /// </summary>
+        /// <param name="dictionaryType">The dictionary type.</param>
         public bool IsDictionary(ITypeSymbol? dictionaryType) => type switch
         {
             { OriginalDefinition: { } originalDefinition } when SymbolEqualityComparer.Default.Equals(originalDefinition, dictionaryType) => true,
-            { AllInterfaces: { Length: not 0 } interfaces } when interfaces.Select(i => i.OriginalDefinition).Contains(dictionaryType, SymbolEqualityComparer.Default) => true,
+            { AllInterfaces: { Length: not 0 } interfaces } when interfaces.Select(static i => i.OriginalDefinition).Contains(dictionaryType, SymbolEqualityComparer.Default) => true,
             _ => false,
         };
     }

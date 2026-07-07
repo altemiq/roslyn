@@ -20,30 +20,20 @@ Namespace CodeAnalysis.VisualBasic
 
             Dim names As New List(Of SimpleNameSyntax) From {first, second, third}
 
-            Await Assert.That(QualifiedName(names)).IsEqualTo(qualified, New NameSynaxComparer())
+            Dim unused = Await Assert.That(QualifiedName(names)).IsEqualTo(qualified, New NameSynaxComparer())
         End Function
 
-        Private Class NameSynaxComparer : Implements IEqualityComparer(Of NameSyntax)
+        Private NotInheritable Class NameSynaxComparer : Implements IEqualityComparer(Of NameSyntax)
             Public Shadows Function Equals(x As NameSyntax, y As NameSyntax) As Boolean Implements IEqualityComparer(Of NameSyntax).Equals
-                If x Is Nothing Then
-                    Return y Is Nothing
-                End If
-
-                If y Is Nothing Then
-                    Return False
-                End If
-
-                If x.GetType() = y.GetType() Then
-                    Return x.GetText().Lines _
+                Return If(x Is Nothing,
+                    y Is Nothing,
+                    y IsNot Nothing AndAlso x.GetType() = y.GetType() AndAlso x.GetText().Lines _
                         .Zip(y.GetText().Lines) _
-                        .All(Function(z) z.First.Span.Equals(z.Second.Span))
-                End If
-
-                Return False
+                        .All(Function(z) z.First.Span.Equals(z.Second.Span)))
             End Function
 
             Public Shadows Function GetHashCode(<DisallowNull> obj As NameSyntax) As Integer Implements IEqualityComparer(Of NameSyntax).GetHashCode
-                Throw New NotImplementedException()
+                Throw New NotSupportedException()
             End Function
         End Class
     End Class

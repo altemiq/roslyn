@@ -8,6 +8,8 @@
 namespace Roslyn.Utilities;
 #pragma warning restore IDE0130, CheckNamespace
 
+#pragma warning disable MA0182
+
 /// <summary>
 /// The XML documentation names.
 /// </summary>

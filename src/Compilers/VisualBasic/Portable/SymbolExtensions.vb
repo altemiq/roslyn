@@ -129,18 +129,17 @@ Public Module SymbolExtensions
     End Function
 
     Private Function GetFullName(type As INamedTypeSymbol) As TypeSyntax
-        Dim namespaceSyntax = GetNamespace(type.ContainingNamespace)
-
-        If type.IsGenericType Then
-            Return SyntaxFactory.QualifiedName(
-                namespaceSyntax,
+        Return If(
+            type.IsGenericType,
+            SyntaxFactory.QualifiedName(
+                GetNamespace(type.ContainingNamespace),
                 SyntaxFactory.GenericName(
                     type.Name,
                     SyntaxFactory.TypeArgumentList(
-                        GetTypeArguments(type))))
-        End If
-
-        Return SyntaxFactory.QualifiedName(namespaceSyntax, SyntaxFactory.IdentifierName(type.Name))
+                        GetTypeArguments(type)))),
+            SyntaxFactory.QualifiedName(
+                GetNamespace(type.ContainingNamespace),
+                SyntaxFactory.IdentifierName(type.Name)))
     End Function
 
     Private Function GetNamespace(namespaceSymbol As INamespaceSymbol) As NameSyntax

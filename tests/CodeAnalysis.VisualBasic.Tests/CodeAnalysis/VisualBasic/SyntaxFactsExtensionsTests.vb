@@ -8,7 +8,7 @@ Namespace CodeAnalysis.VisualBasic
         <Arguments("Type", "[Type]")>
         <Arguments("Other", "Other")>
         Public Shared Async Function Escape(text As String, expected As String) As Task
-            Await Assert.That(EscapeKeyword(text)).IsEqualTo(expected)
+            Dim unused = Await Assert.That(EscapeKeyword(text)).IsEqualTo(expected)
         End Function
     End Class
 End Namespace

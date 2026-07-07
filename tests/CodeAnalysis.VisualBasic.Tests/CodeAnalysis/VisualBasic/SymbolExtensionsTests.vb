@@ -22,9 +22,9 @@ Namespace CodeAnalysis.VisualBasic
         <Arguments(SpecialType.System_Double)>
         Public Shared Async Function ToType(specialType As SpecialType) As Task
             Dim typeSymbolSubstitute = Substitute.For(Of ITypeSymbol)
-            typeSymbolSubstitute.SpecialType.Returns(specialType)
+            Dim unused1 = typeSymbolSubstitute.SpecialType.Returns(specialType)
 
-            Await Assert.That(typeSymbolSubstitute.ToType()).IsNotNull()
+            Dim unused = Await Assert.That(typeSymbolSubstitute.ToType()).IsNotNull()
         End Function
     End Class
 End Namespace

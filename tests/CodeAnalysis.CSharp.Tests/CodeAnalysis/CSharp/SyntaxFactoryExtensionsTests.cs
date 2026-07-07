@@ -1,57 +1,48 @@
-﻿namespace Altemiq.CodeAnalysis.CSharp;
-
+﻿
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-public class SyntaxFactoryExtensionsTests
+namespace Altemiq.CodeAnalysis.CSharp
 {
-    [Test]
-    public async Task QualifiedNameFromNames()
+    public class SyntaxFactoryExtensionsTests
     {
-        var first = SyntaxFactory.IdentifierName("First");
-        var second = SyntaxFactory.IdentifierName("Second");
-        var third = SyntaxFactory.IdentifierName("Third");
-
-        var qualified = SyntaxFactory.QualifiedName(
-            SyntaxFactory.QualifiedName(
-                first,
-                second),
-            third);
-
-        IEnumerable<SimpleNameSyntax> names = [first, second, third];
-
-        await Assert.That(SyntaxFactory.QualifiedName(names)).IsEqualTo(qualified, new NameSynaxComparer());
-    }
-
-    private sealed class NameSynaxComparer : IEqualityComparer<NameSyntax>
-    {
-        public bool Equals(NameSyntax? x, NameSyntax? y)
+        [Test]
+        public async Task QualifiedNameFromNames()
         {
-            if (x is null)
-            {
-                return y is null;
-            }
+            var first = SyntaxFactory.IdentifierName("First");
+            var second = SyntaxFactory.IdentifierName("Second");
+            var third = SyntaxFactory.IdentifierName("Third");
 
-            if (y is null)
-            {
-                return false;
-            }
-            
-            if (x.GetType() == y.GetType())
-            {
-                return x.GetText().Lines
-                    .Zip(y.GetText().Lines)
-                    .All(_ => _.First.Span.Equals(_.Second.Span));
-            }
+            var qualified = SyntaxFactory.QualifiedName(
+                SyntaxFactory.QualifiedName(
+                    first,
+                    second),
+                third);
 
-            return false;
+            IEnumerable<SimpleNameSyntax> names = [first, second, third];
 
-
+            _ = await Assert.That(SyntaxFactory.QualifiedName(names)).IsEqualTo(qualified, new NameSynaxComparer());
         }
 
-        public int GetHashCode([System.Diagnostics.CodeAnalysis.DisallowNull] NameSyntax obj)
+        private sealed class NameSynaxComparer : IEqualityComparer<NameSyntax>
         {
-            throw new NotImplementedException();
+            public bool Equals(NameSyntax? x, NameSyntax? y)
+            {
+                return (x, y) switch
+                {
+                    (null, null) => true,
+                    (not null, not null) => x.GetType() == y.GetType()
+                        && x.GetText().Lines
+                            .Zip(y.GetText().Lines)
+                            .All(static _ => _.First.Span.Equals(_.Second.Span)),
+                    _ => false,
+                };
+            }
+
+            public int GetHashCode([System.Diagnostics.CodeAnalysis.DisallowNull] NameSyntax obj)
+            {
+                throw new NotSupportedException();
+            }
         }
     }
 }

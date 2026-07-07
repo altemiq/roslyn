@@ -6,6 +6,8 @@
 
 Imports System.Runtime.CompilerServices
 
+#Disable Warning IDE0046
+
 Namespace Syntax
     ''' <summary>
     ''' The <see cref="System.Xml.Linq"/> extensions.

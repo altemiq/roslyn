@@ -1,15 +1,17 @@
-﻿namespace Altemiq.CodeAnalysis.CSharp;
-
+﻿
 using Microsoft.CodeAnalysis.CSharp;
 
-public class SyntaxFactsExtensionsTests
+namespace Altemiq.CodeAnalysis.CSharp
 {
-    [Test]
-    [Arguments("int", "@int")]
-    [Arguments("var", "@var")]
-    [Arguments("other", "other")]
-    public async Task Escape(string text, string expected)
+    public class SyntaxFactsExtensionsTests
     {
-        await Assert.That(SyntaxFacts.EscapeKeyword(text)).IsEqualTo(expected);
+        [Test]
+        [Arguments("int", "@int")]
+        [Arguments("var", "@var")]
+        [Arguments("other", "other")]
+        public async Task Escape(string text, string expected)
+        {
+            _ = await Assert.That(SyntaxFacts.EscapeKeyword(text)).IsEqualTo(expected);
+        }
     }
 }

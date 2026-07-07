@@ -25,13 +25,14 @@ public static class XDocumentExtensions
     /// </summary>
     /// <param name="nodes">The nodes.</param>
     /// <returns>The transformed nodes.</returns>
-    public static IEnumerable<XmlNodeSyntax> ToXmlNodes(this IEnumerable<XNode> nodes) => nodes.Select(node => node.ToXmlNode());
+    public static IEnumerable<XmlNodeSyntax> ToXmlNodes(this IEnumerable<XNode> nodes) => nodes.Select(static node => node.ToXmlNode());
 
     /// <summary>
     /// Converts the document in to <see cref="XmlNodeSyntax"/> elements.
     /// </summary>
     /// <param name="document">The document.</param>
     /// <returns>The transformed nodes.</returns>
+    /// <exception cref="InvalidOperationException">The document root is <see langword="null"/>.</exception>
     public static XmlNodeSyntax ToXmlNode(this XDocument document) => document.Root is { } root
         ? root.ToXmlNode()
         : throw new InvalidOperationException();
@@ -41,6 +42,8 @@ public static class XDocumentExtensions
     /// </summary>
     /// <param name="node">The node.</param>
     /// <returns>The transformed node.</returns>
+    /// <exception cref="NotSupportedException"><paramref name="node"/> is not supported.</exception>
+    /// <exception cref="InvalidOperationException">Failed to create element.</exception>
     public static XmlNodeSyntax ToXmlNode(this XNode node)
     {
         return node switch
@@ -89,7 +92,7 @@ public static class XDocumentExtensions
 
         static string GetAttributeValue(XElement element, string name)
         {
-            return element.Attribute(name)!.Value;
+            return element.Attribute(name).Value;
         }
 
         static bool TryGetAttributeValue(XElement element, string name, out string value)
@@ -106,57 +109,46 @@ public static class XDocumentExtensions
 
         static IEnumerable<XmlAttributeSyntax> GetAttributes(XElement element)
         {
-            return element.Attributes().Select<XAttribute, XmlAttributeSyntax>(attribute => attribute switch
+            return element.Attributes().Select<XAttribute, XmlAttributeSyntax>(static attribute => attribute switch
             {
                 { Name.LocalName: Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Name, Value: { } value } => SyntaxFactory.XmlNameAttribute(value),
                 { Name.LocalName: Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, Value: { } value } => SyntaxFactory.XmlCrefAttribute(GetCrefElement(value)),
                 { Name.LocalName: { } name, Value: { } value } => SyntaxFactory.XmlTextAttribute(name, value),
+                _ => throw new NotSupportedException(),
             });
         }
 
         static XmlEmptyElementSyntax CreateSeeElement(XElement element)
         {
-            if (TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, out var cref))
+            return element switch
             {
-                return SyntaxFactory.XmlSeeElement(GetCrefElement(cref));
-            }
-
-            if (TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Langword, out var keyword))
-            {
-                return SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
-                    SyntaxFactory.XmlTextAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Langword, keyword));
-            }
-
-            if (TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, out var href))
-            {
-                return SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
-                    SyntaxFactory.XmlTextAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, href));
-            }
-
-            throw new InvalidOperationException();
+                var e when TryGetAttributeValue(e, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, out var cref) => SyntaxFactory.XmlSeeElement(GetCrefElement(cref)),
+                var e when TryGetAttributeValue(e, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Langword, out var keyword) => SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
+                    SyntaxFactory.XmlTextAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Langword, keyword)),
+                var e when TryGetAttributeValue(e, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, out var href) => SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
+                    SyntaxFactory.XmlTextAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, href)),
+                _ => throw new InvalidOperationException(),
+            };
         }
 
         static XmlEmptyElementSyntax CreateSeeAlsoElement(XElement element)
         {
-            if (TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, out var cref))
+            return element switch
             {
-                return SyntaxFactory.XmlSeeAlsoElement(GetCrefElement(cref));
-            }
-
-            if (TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, out var href))
-            {
-                return SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
-                    SyntaxFactory.XmlTextAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, href));
-            }
-
-            throw new InvalidOperationException();
+                var e when TryGetAttributeValue(e, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, out var cref) => SyntaxFactory.XmlSeeAlsoElement(GetCrefElement(cref)),
+                var e when TryGetAttributeValue(e, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, out var href) => SyntaxFactory.XmlEmptyElement(Roslyn.Utilities.DocumentationCommentXmlNames.Elements.See).AddAttributes(
+                        SyntaxFactory.XmlTextAttribute(Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Href, href)),
+                _ => throw new InvalidOperationException(),
+            };
         }
 
         static CrefSyntax CreateCrefElement(XElement element)
         {
-            return TryGetAttributeValue(element, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, out var cref)
-                ? GetCrefElement(cref)
-                : throw new InvalidOperationException();
+            return element switch
+            {
+                var e when TryGetAttributeValue(e, Roslyn.Utilities.DocumentationCommentXmlNames.Attributes.Cref, out var cref) => GetCrefElement(cref),
+                _ => throw new InvalidOperationException(),
+            };
         }
 
         static CrefSyntax GetCrefElement(string cref)

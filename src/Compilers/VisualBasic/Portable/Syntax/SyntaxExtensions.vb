@@ -18,7 +18,7 @@ Namespace Syntax
         <Runtime.CompilerServices.Extension>
         Public Function ToQualifiedName(names As IEnumerable(Of SimpleNameSyntax)) As NameSyntax
             Dim enumerator = names.GetEnumerator
-            enumerator.MoveNext()
+            Dim unused = enumerator.MoveNext()
 
             Dim name As NameSyntax = enumerator.Current
             While enumerator.MoveNext AndAlso name IsNot Nothing AndAlso enumerator.Current IsNot Nothing

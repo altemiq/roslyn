@@ -18,10 +18,9 @@ Public Module SyntaxFactsExtensions
         End If
 
         ' Check if it's a reserved keyword or a contextual keyword
-        If SyntaxFacts.GetKeywordKind(text) <> SyntaxKind.None OrElse SyntaxFacts.GetContextualKeywordKind(text) <> SyntaxKind.None Then
-            Return $"[{text}]"
-        End If
-
-        Return text
+        Return If(
+            SyntaxFacts.GetKeywordKind(text) <> SyntaxKind.None OrElse SyntaxFacts.GetContextualKeywordKind(text) <> SyntaxKind.None,
+            $"[{text}]",
+            text)
     End Function
 End Module

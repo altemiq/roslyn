@@ -29,12 +29,10 @@ Public Module TypeExtensions
             Throw New ArgumentOutOfRangeException(NameOf(parameters))
         End If
 
-        Dim name = type.Name.Substring(0, index)
-        Dim genericName = SyntaxFactory.GenericName(SyntaxFactory.Identifier(name), SyntaxFactory.TypeArgumentList(parameterList))
-        If type.Namespace IsNot Nothing Then
-            Return SyntaxFactory.QualifiedName(SyntaxFactory.ParseName(type.Namespace), genericName)
-        End If
-
-        Return genericName
+        Dim genericName = SyntaxFactory.GenericName(SyntaxFactory.Identifier(type.Name.Substring(0, index)), SyntaxFactory.TypeArgumentList(parameterList))
+        Return If(
+            type.Namespace IsNot Nothing,
+            SyntaxFactory.QualifiedName(SyntaxFactory.ParseName(type.Namespace), genericName),
+            DirectCast(genericName, Syntax.NameSyntax))
     End Function
 End Module

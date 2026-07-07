@@ -6,8 +6,6 @@
 
 namespace Microsoft.CodeAnalysis.CSharp.Syntax;
 
-#pragma warning disable RCS1263, SA1101
-
 /// <summary>
 /// The syntax extensions.
 /// </summary>
